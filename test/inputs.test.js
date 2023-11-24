@@ -3,11 +3,12 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { NumberInput } = require('../');
+const { NumberInput, TextInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
     new fields.IntegerField('height', {min: 1, max: 100}),
+    new fields.ValueField('color'),
 ]) {
     getArea() {
         return this.width * this.height;
@@ -16,9 +17,14 @@ class Rectangle extends Model([
 
 test('NumberInput can be constructed from field', () => {
     const widthInput = NumberInput.forField(Rectangle.fields.width);
-    document.body.appendChild(widthInput.node);
+    expect(widthInput.node.type).toBe("number");
     expect(widthInput.node.min).toBe("1");
     expect(widthInput.node.max).toBe("100");
+});
+
+test('TextInput can be constructed from field', () => {
+    const colorInput = TextInput.forField(Rectangle.fields.color);
+    expect(colorInput.node.type).toBe("text");
 });
 
 test("writing to NumberInput doesn't break when not following a model", () => {

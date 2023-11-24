@@ -1,23 +1,26 @@
-class NumberInput {
+class Input {
     constructor(opts) {
         this.property = opts.property;
         this.changeEvent = opts.changeEvent;
-        this.min = ('min' in opts) ? opts.min : null;
-        this.max = ('max' in opts) ? opts.max : null;
         this.label = opts.label;
 
-        this.node = this.createNode();
+        this._node = null;
         this.model = null;
+    }
+
+    get node() {
+        if (!this._node) {
+            this._node = this.createNode();
+        }
+        return this._node;
     }
 
     createNode() {
         const node = document.createElement("input");
-        node.type = "number";
+        node.type = this.inputType;
         node.addEventListener("change", () => {
             this.writeValue(this.node.value);
         });
-        if (this.min !== null) node.min = this.min;
-        if (this.max !== null) node.max = this.max;
         return node;
     }
 
@@ -27,27 +30,60 @@ class NumberInput {
     }
 
     followModel(model) {
-      this.model = model;
-      this.model.on(this.changeEvent, (newValue) => {
-        this.renderValue(newValue);
-      })
-      this.renderValue(this.model[this.property]);
+        this.model = model;
+        this.model.on(this.changeEvent, (newValue) => {
+            this.renderValue(newValue);
+        })
+        this.renderValue(this.model[this.property]);
     }
 
     renderValue(value) {
-      this.node.value = value;
+        this.node.value = value;
     }
 
-    static forField(field, opts) {
-        return new NumberInput({
+    static getOptsFromField(field) {
+        return {
             label: field.label,
             property: field.name,
             changeEvent: field.eventName,
-            min: field.min,
-            max: field.max,
+        };
+    }
+
+    static forField(field, opts) {
+        return new this({
+            ...this.getOptsFromField(field),
             ...opts
         });
     }
 }
 
-module.exports = { NumberInput };
+class TextInput extends Input {
+    inputType = "text";
+}
+
+class NumberInput extends Input {
+    inputType = "number";
+
+    constructor(opts) {
+        super(opts);
+        this.min = ('min' in opts) ? opts.min : null;
+        this.max = ('max' in opts) ? opts.max : null;
+    }
+
+    createNode() {
+        const node = super.createNode();
+        if (this.min !== null) node.min = this.min;
+        if (this.max !== null) node.max = this.max;
+        return node;
+    }
+
+    static getOptsFromField(field) {
+        return {
+            ...super.getOptsFromField(field),
+            min: field.min,
+            max: field.max,
+        };
+    }
+}
+
+module.exports = { NumberInput, TextInput };
