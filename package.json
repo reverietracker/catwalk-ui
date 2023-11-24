@@ -4,7 +4,7 @@
   "description": "UI layer for the Catwalk framework",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/reverietracker/catwalk-ui/issues"
   },
-  "homepage": "https://github.com/reverietracker/catwalk-ui#readme"
+  "homepage": "https://github.com/reverietracker/catwalk-ui#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
 }
