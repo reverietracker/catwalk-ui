@@ -4,6 +4,7 @@ class NumberInput {
         this.changeEvent = opts.changeEvent;
         this.min = ('min' in opts) ? opts.min : null;
         this.max = ('max' in opts) ? opts.max : null;
+        this.label = opts.label;
 
         this.node = this.createNode();
         this.model = null;
@@ -35,6 +36,17 @@ class NumberInput {
 
     renderValue(value) {
       this.node.value = value;
+    }
+
+    static forField(field, opts) {
+        return new NumberInput({
+            label: field.label,
+            property: field.name,
+            changeEvent: field.eventName,
+            min: field.min,
+            max: field.max,
+            ...opts
+        });
     }
 }
 

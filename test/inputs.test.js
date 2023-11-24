@@ -14,8 +14,8 @@ class Rectangle extends Model([
     }
 }
 
-test('NumberInput sets min/max on input', () => {
-    const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth', min: 1, max: 100});
+test('NumberInput can be constructed from field', () => {
+    const widthInput = NumberInput.forField(Rectangle.fields.width);
     document.body.appendChild(widthInput.node);
     expect(widthInput.node.min).toBe("1");
     expect(widthInput.node.max).toBe("100");
