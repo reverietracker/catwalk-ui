@@ -1,0 +1,38 @@
+// const { Component } = require('.');
+
+function addChild(parent, child) {
+    if (typeof(child) == 'string') {
+        parent.appendChild(document.createTextNode(child));
+    } else if ('node' in child) {
+        parent.appendChild(child.node);
+    } else {
+        parent.appendChild(child);
+    }
+}
+
+function jsxs(name, attrs) {
+    let elem = document.createElement(name);
+    for (const[attr, value] of Object.entries(attrs)) {
+        if (attr == 'children') {
+            if (Array.isArray(value)) {
+                value.forEach((child) => {addChild(elem, child);});
+            } else {
+                addChild(elem, value);
+            }
+        } else if (attr.startsWith('on')) {
+            elem.addEventListener(attr.substring(2), value);
+        } else {
+            elem.setAttribute(attr, value);
+        }
+    }
+    return elem;
+}
+
+let jsx = jsxs;
+
+function Fragment() {
+    console.log('Fragment', arguments);
+    throw 'unimplemented';
+}
+
+module.exports = { jsx, jsxs, Fragment };
