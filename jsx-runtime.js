@@ -21,6 +21,10 @@ function jsxs(name, attrs) {
             }
         } else if (attr.startsWith('on')) {
             elem.addEventListener(attr.substring(2), value);
+        } else if (attr == 'style' && typeof(value) == 'object') {
+            for (const [styleName, styleValue] of Object.entries(value)) {
+                elem.style[styleName] = styleValue;
+            }
         } else {
             elem.setAttribute(attr, value);
         }
