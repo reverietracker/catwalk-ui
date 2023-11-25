@@ -27,6 +27,8 @@ class Input {
     writeValue(newValue) {
         if (!this.model) return;
         this.model[this.property] = newValue;
+        // read back the value from the model, in case it was cleaned
+        this.renderValue(this.model[this.property]);
     }
 
     followModel(model) {

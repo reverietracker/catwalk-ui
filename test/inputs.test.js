@@ -46,3 +46,21 @@ test('NumberInput can follow model', () => {
     widthInput.node.dispatchEvent(new Event('change'));
     expect(rect.width).toBe(60);
 });
+
+test('input is always cleaned', () => {
+    const rect = new Rectangle({width: 10, height: 20});
+    const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth'});
+    document.body.appendChild(widthInput.node);
+    widthInput.followModel(rect);
+    widthInput.node.value = "200";
+    widthInput.node.dispatchEvent(new Event('change'));
+    expect(rect.width).toBe(100);
+    expect(widthInput.node.value).toBe("100");
+
+    // setting an out-of-range value again won't cause a change event,
+    // but we must still end up with the input showing the cleaned value
+    widthInput.node.value = "300";
+    widthInput.node.dispatchEvent(new Event('change'));
+    expect(rect.width).toBe(100);
+    expect(widthInput.node.value).toBe("100");
+});
