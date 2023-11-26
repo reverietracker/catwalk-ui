@@ -3,7 +3,7 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { NumberInput, TextInput } = require('../');
+const { Component, NumberInput, TextInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
@@ -15,15 +15,22 @@ class Rectangle extends Model([
     }
 }
 
+test('Base component has no rendering', () => {
+    const base = new Component();
+    expect(() => base.node).toThrow(Error);
+});
+
 test('NumberInput can be constructed from field', () => {
-    const widthInput = NumberInput.forField(Rectangle.fields.width);
+    const WidthInput = NumberInput.forField(Rectangle.fields.width);
+    const widthInput = new WidthInput();
     expect(widthInput.node.type).toBe("number");
     expect(widthInput.node.min).toBe("1");
     expect(widthInput.node.max).toBe("100");
 });
 
 test('TextInput can be constructed from field', () => {
-    const colorInput = TextInput.forField(Rectangle.fields.color);
+    const ColorInput = TextInput.forField(Rectangle.fields.color);
+    const colorInput = new ColorInput();
     expect(colorInput.node.type).toBe("text");
 });
 

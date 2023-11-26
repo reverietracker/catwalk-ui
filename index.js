@@ -1,11 +1,13 @@
-class Input {
+class Component {
+    static opts = {};
+
     constructor(opts) {
-        this.property = opts.property;
-        this.changeEvent = opts.changeEvent;
-        this.label = opts.label;
+        this.opts = {
+            ...this.constructor.opts,
+            ...opts
+        };
 
         this._node = null;
-        this.model = null;
     }
 
     get node() {
@@ -14,6 +16,34 @@ class Input {
         }
         return this._node;
     }
+
+    createNode() {
+        throw new Error("Not implemented");
+    }
+
+    static withOptions(opts) {
+        const newOpts = {
+            ...this.opts,
+            ...opts
+        };
+
+        return class extends this {
+            static opts = newOpts;
+        }
+    }
+}
+
+class Input extends Component {
+    constructor(opts) {
+        super(opts);
+
+        this.property = this.opts.property;
+        this.changeEvent = this.opts.changeEvent;
+        this.label = this.opts.label;
+
+        this.model = null;
+    }
+
 
     createNode() {
         const node = document.createElement("input");
@@ -52,7 +82,7 @@ class Input {
     }
 
     static forField(field, opts) {
-        return new this({
+        return this.withOptions({
             ...this.getOptsFromField(field),
             ...opts
         });
@@ -68,8 +98,8 @@ class NumberInput extends Input {
 
     constructor(opts) {
         super(opts);
-        this.min = ('min' in opts) ? opts.min : null;
-        this.max = ('max' in opts) ? opts.max : null;
+        this.min = ('min' in this.opts) ? this.opts.min : null;
+        this.max = ('max' in this.opts) ? this.opts.max : null;
     }
 
     createNode() {
@@ -88,4 +118,4 @@ class NumberInput extends Input {
     }
 }
 
-module.exports = { NumberInput, TextInput };
+module.exports = { Component, NumberInput, TextInput };
