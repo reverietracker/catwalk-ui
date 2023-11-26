@@ -61,7 +61,7 @@ class Input extends Component {
         this.renderValue(this.model[this.property]);
     }
 
-    followModel(model) {
+    trackModel(model) {
         this.model = model;
         this.model.on(this.changeEvent, (newValue) => {
             this.renderValue(newValue);

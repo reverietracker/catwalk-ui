@@ -34,7 +34,7 @@ test('TextInput can be constructed from field', () => {
     expect(colorInput.node.type).toBe("text");
 });
 
-test("writing to NumberInput doesn't break when not following a model", () => {
+test("writing to NumberInput doesn't break when not tracking a model", () => {
     const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth'});
     document.body.appendChild(widthInput.node);
     widthInput.node.value = "60";
@@ -42,11 +42,11 @@ test("writing to NumberInput doesn't break when not following a model", () => {
     expect(widthInput.node.value).toBe("60");
 });
 
-test('NumberInput can follow model', () => {
+test('NumberInput can track model', () => {
     const rect = new Rectangle({width: 10, height: 20});
     const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth'});
     document.body.appendChild(widthInput.node);
-    widthInput.followModel(rect);
+    widthInput.trackModel(rect);
     rect.width = 50;
     expect(widthInput.node.value).toBe("50");
     widthInput.node.value = "60";
@@ -58,7 +58,7 @@ test('input is always cleaned', () => {
     const rect = new Rectangle({width: 10, height: 20});
     const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth'});
     document.body.appendChild(widthInput.node);
-    widthInput.followModel(rect);
+    widthInput.trackModel(rect);
     widthInput.node.value = "200";
     widthInput.node.dispatchEvent(new Event('change'));
     expect(rect.width).toBe(100);
