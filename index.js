@@ -33,6 +33,25 @@ class Component {
     }
 }
 
+class Container extends Component {
+    static components = {};
+
+    constructor(opts) {
+        super(opts);
+        for (const [name, cls] of Object.entries(this.constructor.components)) {
+            this[name] = new cls();
+        }
+    }
+
+    createNode() {
+        const node = document.createElement("div");
+        for (const name of Object.keys(this.constructor.components)) {
+            node.append(this[name].node);
+        }
+        return node;
+    }
+}
+
 class Input extends Component {
     constructor(options) {
         super(options);
@@ -118,4 +137,4 @@ class NumberInput extends Input {
     }
 }
 
-module.exports = { Component, NumberInput, TextInput };
+module.exports = { Component, Container, Input, NumberInput, TextInput };
