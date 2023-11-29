@@ -69,7 +69,9 @@ we can set up a `NumberInput` to track the `width` field of `rect`:
 ```javascript
 import { NumberInput } from 'catwalk-ui';
 
-const myWidthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth', min: 1, max: 100});
+const myWidthInput = new NumberInput({
+    property: 'width', changeEvent: 'changeWidth', min: 1, max: 100
+});
 myWidthInput.trackModel(rect);
 ```
 
@@ -86,7 +88,9 @@ Try reading and writing `window.rect.width` in the browser's JavaScript console 
 Rather than instantiating `NumberInput` with a set of properties, we can use `NumberInput.withOptions` to create a subclass that will have those options pre-set on all instances:
 
 ```javascript
-const WidthInput = NumberInput.withOptions({property: 'width', changeEvent: 'changeWidth', min: 1, max: 100});
+const WidthInput = NumberInput.withOptions({
+    property: 'width', changeEvent: 'changeWidth', min: 1, max: 100
+});
 const myWidthInput1 = new WidthInput();
 const myWidthInput1 = new WidthInput();
 const myWidthInput1 = new WidthInput();
