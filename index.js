@@ -1,10 +1,10 @@
 class Component {
-    static opts = {};
+    static options = {};
 
-    constructor(opts) {
-        this.opts = {
-            ...this.constructor.opts,
-            ...opts
+    constructor(options) {
+        this.options = {
+            ...this.constructor.options,
+            ...options
         };
 
         this._node = null;
@@ -21,25 +21,25 @@ class Component {
         throw new Error("Not implemented");
     }
 
-    static withOptions(opts) {
-        const newOpts = {
-            ...this.opts,
-            ...opts
+    static withOptions(options) {
+        const newOptions = {
+            ...this.options,
+            ...options
         };
 
         return class extends this {
-            static opts = newOpts;
+            static options = newOptions;
         }
     }
 }
 
 class Input extends Component {
-    constructor(opts) {
-        super(opts);
+    constructor(options) {
+        super(options);
 
-        this.property = this.opts.property;
-        this.changeEvent = this.opts.changeEvent;
-        this.label = this.opts.label;
+        this.property = this.options.property;
+        this.changeEvent = this.options.changeEvent;
+        this.label = this.options.label;
 
         this.model = null;
     }
@@ -81,10 +81,10 @@ class Input extends Component {
         };
     }
 
-    static forField(field, opts) {
+    static forField(field, options) {
         return this.withOptions({
             ...this.getOptsFromField(field),
-            ...opts
+            ...options
         });
     }
 }
@@ -96,10 +96,10 @@ class TextInput extends Input {
 class NumberInput extends Input {
     inputType = "number";
 
-    constructor(opts) {
-        super(opts);
-        this.min = ('min' in this.opts) ? this.opts.min : null;
-        this.max = ('max' in this.opts) ? this.opts.max : null;
+    constructor(options) {
+        super(options);
+        this.min = ('min' in this.options) ? this.options.min : null;
+        this.max = ('max' in this.options) ? this.options.max : null;
     }
 
     createNode() {
