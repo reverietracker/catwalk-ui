@@ -70,6 +70,8 @@ Like `withOptions`, `forField` returns a class rather than an instance - it must
 Alongside `NumberInput`, a `TextInput` component is provided for tracking string fields. Inputs also provide a `labelNode` property, giving a `<label>` element for the input:
 
 ```javascript
+import { TextInput } from 'catwalk-ui';
+
 const ColorInput = TextInput.forField(Rectangle.fields.color);
 const myColorInput = new ColorInput();
 myColorInput.trackModel(rect);

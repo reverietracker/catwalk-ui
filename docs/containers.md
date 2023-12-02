@@ -3,6 +3,8 @@
 A container is a component that can contain other components.  The `Container` class has a class-level `components` property that can be used to define the components that will be created when the container is instantiated. These are available as properties on the container instance. When defining the container's HTML representation using JSX, the child components can be referenced directly (i.e. it is possible to write `{this.someInput}` rather than `{this.someInput.node}`).
 
 ```javascript
+import { Container } from 'catwalk-ui';
+
 class RectanglePanel extends Container {
     static components = {
         colorInput: TextInput.forField(Rectangle.fields.color),
