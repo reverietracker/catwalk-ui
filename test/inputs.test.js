@@ -75,8 +75,12 @@ test('input is always cleaned', () => {
 test('inputs have labels', () => {
     const WidthInput = NumberInput.forField(Rectangle.fields.width);
     const widthInput = new WidthInput();
+    expect(widthInput.node.id).toBe("width");
+
     const labelNode = widthInput.labelNode;
     expect(labelNode.textContent).toBe("Width");
+    expect(labelNode.htmlFor).toBe("width");
+
     // labelNode should be cached
     expect(widthInput.labelNode).toBe(labelNode);
 });

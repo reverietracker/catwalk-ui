@@ -73,6 +73,7 @@ class Input extends Component {
         this.property = this.options.property;
         this.changeEvent = this.options.changeEvent;
         this.label = this.options.label;
+        this.id = this.options.id;
 
         this.model = null;
         this._labelNode = null;
@@ -81,6 +82,7 @@ class Input extends Component {
     createNode() {
         const node = document.createElement("input");
         node.type = this.inputType;
+        node.id = this.id;
         node.addEventListener("change", () => {
             this.writeValue(this.node.value);
         });
@@ -91,6 +93,7 @@ class Input extends Component {
         if (!this._labelNode) {
             this._labelNode = document.createElement("label");
             this._labelNode.append(this.label);
+            this._labelNode.htmlFor = this.id;
         }
         return this._labelNode;
     }
@@ -118,6 +121,7 @@ class Input extends Component {
         return {
             label: field.label,
             property: field.name,
+            id: field.name,
             changeEvent: field.eventName,
         };
     }
