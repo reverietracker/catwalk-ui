@@ -19,12 +19,6 @@ class RectanglePanel extends Container {
             </div>
         );
     }
-
-    trackModel(rect) {
-        this.colorInput.trackModel(rect);
-        this.widthInput.trackModel(rect);
-        this.heightInput.trackModel(rect);
-    }
 }
 
 rect = new Rectangle({width: 50, height: 50, color: 'red'});
@@ -33,3 +27,5 @@ rectanglePanel.trackModel(rect);
 
 document.body.appendChild(rectanglePanel.node);
 ```
+
+Calls to `trackModel` method on a container will be passed on to all child components that implement the `trackModel` method.

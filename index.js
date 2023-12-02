@@ -50,6 +50,12 @@ class Container extends Component {
         }
         return node;
     }
+
+    trackModel(model) {
+        for (const name of Object.keys(this.constructor.components)) {
+            if (this[name].trackModel) this[name].trackModel(model);
+        }
+    }
 }
 
 class Input extends Component {
