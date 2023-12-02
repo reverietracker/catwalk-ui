@@ -65,15 +65,31 @@ test('container can be rendered and track model', () => {
 });
 
 test('Container has default rendering', () => {
+    class AreaDisplay extends Component {
+        constructor(options) {
+            super(options);
+            this.model = null;
+        }
+        createNode() {
+            return document.createElement("div");
+        }
+        trackModel(model) {
+            this.model = model;
+            this.node.textContent = model.getArea();
+        }
+    }
+
     class RectangleView extends Container {
         static components = {
             colorInput: TextInput.forField(Rectangle.fields.color),
             widthInput: NumberInput.forField(Rectangle.fields.width),
             heightInput: NumberInput.forField(Rectangle.fields.height),
+            areaDisplay: AreaDisplay,
         }
     }
 
     const view = new RectangleView();
     document.body.append(view.node);
     expect(document.querySelectorAll('input').length).toBe(3);
+    expect(document.querySelectorAll('label').length).toBe(3);
 });

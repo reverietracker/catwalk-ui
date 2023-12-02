@@ -46,7 +46,15 @@ class Container extends Component {
     createNode() {
         const node = document.createElement("div");
         for (const name of Object.keys(this.constructor.components)) {
-            node.append(this[name].node);
+            const child = this[name];
+            if ('labelNode' in child) {
+                const childContainer = document.createElement("div");
+                childContainer.append(child.labelNode);
+                childContainer.append(child.node);
+                node.append(childContainer);
+            } else {
+                node.append(child.node);
+            }
         }
         return node;
     }
@@ -67,8 +75,8 @@ class Input extends Component {
         this.label = this.options.label;
 
         this.model = null;
+        this._labelNode = null;
     }
-
 
     createNode() {
         const node = document.createElement("input");
@@ -77,6 +85,14 @@ class Input extends Component {
             this.writeValue(this.node.value);
         });
         return node;
+    }
+
+    get labelNode() {
+        if (!this._labelNode) {
+            this._labelNode = document.createElement("label");
+            this._labelNode.append(this.label);
+        }
+        return this._labelNode;
     }
 
     writeValue(newValue) {

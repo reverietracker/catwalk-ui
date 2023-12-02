@@ -67,4 +67,13 @@ const WidthInput = NumberInput.forField(Rectangle.fields.width);
 
 Like `withOptions`, `forField` returns a class rather than an instance - it must be instantiated separately.
 
-Alongside `NumberInput`, a `TextInput` component is provided for tracking string fields.
+Alongside `NumberInput`, a `TextInput` component is provided for tracking string fields. Inputs also provide a `labelNode` property, giving a `<label>` element for the input:
+
+```javascript
+const ColorInput = TextInput.forField(Rectangle.fields.color);
+const myColorInput = new ColorInput();
+myColorInput.trackModel(rect);
+
+document.body.appendChild(myColorInput.labelNode);
+document.body.appendChild(myColorInput.node);
+```
