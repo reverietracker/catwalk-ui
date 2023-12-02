@@ -84,3 +84,18 @@ test('inputs have labels', () => {
     // labelNode should be cached
     expect(widthInput.labelNode).toBe(labelNode);
 });
+
+test('inputs stop tracking model when new model is set', () => {
+    const rect1 = new Rectangle({width: 10, height: 20});
+    const rect2 = new Rectangle({width: 30, height: 40});
+    const widthInput = new NumberInput({property: 'width', changeEvent: 'changeWidth'});
+    document.body.appendChild(widthInput.node);
+    widthInput.trackModel(rect1);
+    rect1.width = 50;
+    expect(widthInput.node.value).toBe("50");
+    widthInput.trackModel(rect2);
+    rect1.width = 60;
+    expect(widthInput.node.value).toBe("30");
+    rect2.width = 70;
+    expect(widthInput.node.value).toBe("70");
+});
