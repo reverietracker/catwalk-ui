@@ -10,7 +10,15 @@ import { Model, fields } from 'catwalk';
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 1000}),
     new fields.IntegerField('height', {min: 1, max: 1000}),
-    new fields.ValueField('color'),
+    new fields.ValueField('name'),
+    new fields.EnumField('color', {
+        choices: [
+            ['ff0000', 'red'],
+            ['00ff00', 'green'],
+            ['0000ff', 'blue'],
+        ],
+        default: 'ff0000'
+    }),
 ]) {
     getArea() {
         return this.width * this.height;
@@ -67,15 +75,44 @@ const WidthInput = NumberInput.forField(Rectangle.fields.width);
 
 Like `withOptions`, `forField` returns a class rather than an instance - it must be instantiated separately.
 
-Alongside `NumberInput`, a `TextInput` component is provided for tracking string fields. Inputs also provide a `labelNode` property, giving a `<label>` element for the input:
+Inputs provide a `labelNode` property, giving a `<label>` element for the input:
 
 ```javascript
 import { TextInput } from 'catwalk-ui';
 
-const ColorInput = TextInput.forField(Rectangle.fields.color);
+const myWidthInput = new WidthInput();
+myWidthInput.trackModel(rect);
+
+document.body.appendChild(myWidthInput.labelNode);
+document.body.appendChild(myWidthInput.node);
+```
+
+The input components provided by `catwalk-ui` are:
+
+* `Input` - the base class for all inputs, not intended to be used directly. Recognises the following options:
+    * `property` - the name of the model field to track
+    * `changeEvent` - the name of the event to listen to on the model
+    * `label` - the text to use for the input's label
+    * `id` - the identifier to use for the input's `id` attribute
+* `TextInput` - provides an `<input type="text">` element, suitable for tracking `ValueField`s with string values.
+* `NumberInput` - provides an `<input type="number">` element, suitable for tracking `IntegerField`s. Recognises the following additional options:
+    * `min` - the minimum value for the input
+    * `max` - the maximum value for the input
+* `SelectInput` - provides a `<select>` element, suitable for tracking `EnumField`s. Recognises the following additional option:
+    * `choices` - a list of [value, label] pairs to use for the `<option>` elements
+
+Examples:
+
+```javascript
+import { TextInput, SelectInput } from 'catwalk-ui';
+
+const NameInput = TextInput.forField(Rectangle.fields.name);
+const myNameInput = new NameInput();
+myNameInput.trackModel(rect);
+const ColorInput = SelectInput.forField(Rectangle.fields.color);
 const myColorInput = new ColorInput();
 myColorInput.trackModel(rect);
 
-document.body.appendChild(myColorInput.labelNode);
+document.body.appendChild(myNameInput.node);
 document.body.appendChild(myColorInput.node);
 ```

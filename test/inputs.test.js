@@ -3,12 +3,20 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { Component, NumberInput, TextInput } = require('../');
+const { Component, NumberInput, TextInput, SelectInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
     new fields.IntegerField('height', {min: 1, max: 100}),
-    new fields.ValueField('color'),
+    new fields.ValueField('name'),
+    new fields.EnumField('color', {
+        choices: [
+            ['ff0000', 'red'],
+            ['00ff00', 'green'],
+            ['0000ff', 'blue'],
+        ],
+        default: 'ff0000'
+    }),
 ]) {
     getArea() {
         return this.width * this.height;
@@ -29,9 +37,22 @@ test('NumberInput can be constructed from field', () => {
 });
 
 test('TextInput can be constructed from field', () => {
-    const ColorInput = TextInput.forField(Rectangle.fields.color);
+    const NameInput = TextInput.forField(Rectangle.fields.name);
+    const nameInput = new NameInput();
+    expect(nameInput.node.type).toBe("text");
+});
+
+test('SelectInput can be constructed from field', () => {
+    const ColorInput = SelectInput.forField(Rectangle.fields.color);
     const colorInput = new ColorInput();
-    expect(colorInput.node.type).toBe("text");
+    expect(colorInput.node.tagName).toBe("SELECT");
+    expect(colorInput.node.options.length).toBe(3);
+    expect(colorInput.node.options[0].value).toBe("ff0000");
+    expect(colorInput.node.options[0].innerText).toBe("red");
+    expect(colorInput.node.options[1].value).toBe("00ff00");
+    expect(colorInput.node.options[1].innerText).toBe("green");
+    expect(colorInput.node.options[2].value).toBe("0000ff");
+    expect(colorInput.node.options[2].innerText).toBe("blue");
 });
 
 test("writing to NumberInput doesn't break when not tracking a model", () => {
@@ -52,6 +73,19 @@ test('NumberInput can track model', () => {
     widthInput.node.value = "60";
     widthInput.node.dispatchEvent(new Event('change'));
     expect(rect.width).toBe(60);
+});
+
+test('SelectInput can track model', () => {
+    const rect = new Rectangle({width: 10, height: 20});
+    const ColorInput = SelectInput.forField(Rectangle.fields.color);
+    const colorInput = new ColorInput();
+    document.body.appendChild(colorInput.node);
+    colorInput.trackModel(rect);
+    rect.color = '00ff00';
+    expect(colorInput.node.value).toBe("00ff00");
+    colorInput.node.value = "0000ff";
+    colorInput.node.dispatchEvent(new Event('change'));
+    expect(rect.color).toBe('0000ff');
 });
 
 test('input is always cleaned', () => {
