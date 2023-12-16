@@ -23,6 +23,14 @@ class Rectangle extends Model([
     }
 }
 
+class Wave extends Model([
+    new fields.EnumField('waveType', {choices: [
+        [1, "Square"],
+        [2, "Triangle"],
+        [3, "Sine"],
+    ], default: 1}),
+]) {}
+
 test('Base component has no rendering', () => {
     const base = new Component();
     expect(() => base.node).toThrow(Error);
@@ -86,6 +94,19 @@ test('SelectInput can track model', () => {
     colorInput.node.value = "0000ff";
     colorInput.node.dispatchEvent(new Event('change'));
     expect(rect.color).toBe('0000ff');
+});
+
+test('SelectInput can track model with integer field', () => {
+    const wave = new Wave({waveType: 1});
+    const WaveTypeInput = SelectInput.forField(Wave.fields.waveType);
+    const waveTypeInput = new WaveTypeInput();
+    document.body.appendChild(waveTypeInput.node);
+    waveTypeInput.trackModel(wave);
+    wave.waveType = 2;
+    expect(waveTypeInput.node.value).toBe("2");
+    waveTypeInput.node.value = "3";
+    waveTypeInput.node.dispatchEvent(new Event('change'));
+    expect(wave.waveType).toBe(3);
 });
 
 test('input is always cleaned', () => {
