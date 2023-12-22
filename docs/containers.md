@@ -31,3 +31,40 @@ document.body.appendChild(rectanglePanel.node);
 ```
 
 Calls to `trackModel` method on a container will be passed on to all child components that implement the `trackModel` method.
+
+If a `createNode` method is not provided, a default rendering will be used, consisting of a `<div>` element containing the child components in sequence. Child components that provide a `labelNode` property will be rendered as a `<div>` containing the label and the component; child components that do not provide `labelNode` will be rendered directly with no wrapper. The `baseElementName` option can be overridden to use a different element type as the top-level element.
+
+## Fieldsets
+
+The `Fieldset` class is a subclass of `Container` that provides a default rendering using `<fieldset>` as the top-level element. It also provides a `legend` option that can be used to set the `<legend>` element.
+
+```javascript
+import { Container, Fieldset } from 'catwalk-ui';
+
+class SizeFieldset extends Fieldset.withOptions({legend: 'Size'}) {
+    static components = {
+        widthInput: NumberInput.forField(Rectangle.fields.width),
+        heightInput: NumberInput.forField(Rectangle.fields.height),
+    }
+}
+
+class RectanglePanel extends Container {
+    static components = {
+        colorInput: TextInput.forField(Rectangle.fields.color),
+        sizeFieldset: SizeFieldset,
+    }
+
+    createNode() {
+        return (
+            <div>
+                <h2>Rectangle</h2>
+                <div>
+                    {this.colorInput.labelNode}
+                    {this.colorInput}
+                </div>
+                {this.sizeFieldset}
+            </div>
+        );
+    }
+}
+```

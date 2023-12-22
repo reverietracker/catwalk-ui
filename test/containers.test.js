@@ -3,7 +3,7 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { Component, Container, NumberInput, TextInput } = require('../');
+const { Component, Container, Fieldset, NumberInput, TextInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
@@ -92,4 +92,37 @@ test('Container has default rendering', () => {
     document.body.append(view.node);
     expect(document.querySelectorAll('input').length).toBe(3);
     expect(document.querySelectorAll('label').length).toBe(3);
+});
+
+test('Fieldset has default rendering with legend', () => {
+    class SizeFieldset extends Fieldset.withOptions({legend: 'Size'}) {
+        static components = {
+            widthInput: NumberInput.forField(Rectangle.fields.width),
+            heightInput: NumberInput.forField(Rectangle.fields.height),
+        }
+    }
+
+    const fieldset = new SizeFieldset();
+    document.body.append(fieldset.node);
+    expect(document.querySelectorAll('fieldset').length).toBe(1);
+    expect(document.querySelectorAll('legend').length).toBe(1);
+    expect(document.querySelector('legend').innerText).toBe("Size");
+    expect(document.querySelectorAll('input').length).toBe(2);
+    expect(document.querySelectorAll('label').length).toBe(2);
+});
+
+test('Fieldset has default rendering without legend', () => {
+    class SizeFieldset extends Fieldset {
+        static components = {
+            widthInput: NumberInput.forField(Rectangle.fields.width),
+            heightInput: NumberInput.forField(Rectangle.fields.height),
+        }
+    }
+
+    const fieldset = new SizeFieldset();
+    document.body.append(fieldset.node);
+    expect(document.querySelectorAll('fieldset').length).toBe(1);
+    expect(document.querySelectorAll('legend').length).toBe(0);
+    expect(document.querySelectorAll('input').length).toBe(2);
+    expect(document.querySelectorAll('label').length).toBe(2);
 });
