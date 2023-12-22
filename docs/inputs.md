@@ -57,14 +57,14 @@ const WidthInput = NumberInput.withOptions({
     property: 'width', changeEvent: 'changeWidth', min: 1, max: 100
 });
 const myWidthInput1 = new WidthInput();
-const myWidthInput1 = new WidthInput();
-const myWidthInput1 = new WidthInput();
+const myWidthInput2 = new WidthInput();
+const myWidthInput3 = new WidthInput();
 myWidthInput1.trackModel(rect);
-myWidthInput1.trackModel(rect);
-myWidthInput1.trackModel(rect);
+myWidthInput2.trackModel(rect);
+myWidthInput3.trackModel(rect);
 document.body.appendChild(myWidthInput1.node);
-document.body.appendChild(myWidthInput1.node);
-document.body.appendChild(myWidthInput1.node);
+document.body.appendChild(myWidthInput2.node);
+document.body.appendChild(myWidthInput3.node);
 ```
 
 Note that the options we're passing to `withOptions` are really just duplicating information defined on the model. As a shorthand, we can tell NumberInput to pick up its options from the model field using `forField`:
