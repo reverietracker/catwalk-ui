@@ -1,6 +1,6 @@
 # Containers
 
-A container is a component that can contain other components.  The `Container` class has a class-level `components` property that can be used to define the components that will be created when the container is instantiated. These are available as properties on the container instance. When defining the container's HTML representation using JSX, the child components can be referenced directly (i.e. it is possible to write `{this.someInput}` rather than `{this.someInput.node}`).
+A container is a component that can contain other components.  The `Container` class has a class-level `components` property that can be used to define the components that will be created when the container is instantiated. These are available as properties on the container instance. When defining the container's HTML representation using JSX, the child components can be referenced directly (i.e. it is possible to write `{this.someInput}` rather than `{this.someInput.node}`). Using the `Rectangle` model seen previously:
 
 ```javascript
 import { Container } from 'catwalk-ui';
@@ -30,7 +30,7 @@ rectanglePanel.trackModel(rect);
 document.body.appendChild(rectanglePanel.node);
 ```
 
-Calls to `trackModel` method on a container will be passed on to all child components that implement the `trackModel` method.
+Calls to `trackModel` method on a container will be passed on to all child components.
 
 If a `createNode` method is not provided, a default rendering will be used, consisting of a `<div>` element containing the child components in sequence. Child components that provide a `labelNode` property will be rendered as a `<div>` containing the label and the component; child components that do not provide `labelNode` will be rendered directly with no wrapper. The `baseElementName` option can be overridden to use a different element type as the top-level element.
 

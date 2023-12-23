@@ -126,3 +126,25 @@ test('Fieldset has default rendering without legend', () => {
     expect(document.querySelectorAll('input').length).toBe(2);
     expect(document.querySelectorAll('label').length).toBe(2);
 });
+
+test('Components can track fields of models', () => {
+    class colorDisplay extends Component {
+        constructor(options) {
+            super(options);
+            this.trackField(Rectangle.fields.color, () => {
+                this.node.textContent = this.model.color;
+            });
+        }
+        createNode() {
+            return document.createElement("div");
+        }
+    }
+
+    const rect = new Rectangle({width: 50, height: 50, color: 'red'});
+    const display = new colorDisplay();
+    document.body.append(display.node);
+    display.trackModel(rect);
+    expect(display.node.textContent).toBe('red');
+    rect.color = 'green';
+    expect(display.node.textContent).toBe('green');
+});
