@@ -154,3 +154,14 @@ test('inputs stop tracking model when new model is set', () => {
     rect2.width = 70;
     expect(widthInput.node.value).toBe("70");
 });
+
+test('inputs work without a property', () => {
+    const widthInput = new NumberInput();
+    document.body.appendChild(widthInput.node);
+    widthInput.node.value = "60";
+    widthInput.node.dispatchEvent(new Event('change'));
+    expect(widthInput.node.value).toBe("60");
+    const rect = new Rectangle({width: 10, height: 20});
+    widthInput.trackModel(rect);  // no effect
+    expect(widthInput.node.value).toBe("60");
+});
