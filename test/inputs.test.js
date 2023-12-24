@@ -3,7 +3,7 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { Component, NumberInput, TextInput, SelectInput } = require('../');
+const { Component, NumberInput, RangeInput, TextInput, SelectInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
@@ -40,6 +40,14 @@ test('NumberInput can be constructed from field', () => {
     const WidthInput = NumberInput.forField(Rectangle.fields.width);
     const widthInput = new WidthInput();
     expect(widthInput.node.type).toBe("number");
+    expect(widthInput.node.min).toBe("1");
+    expect(widthInput.node.max).toBe("100");
+});
+
+test('RangeInput can be constructed from field', () => {
+    const WidthInput = RangeInput.forField(Rectangle.fields.width);
+    const widthInput = new WidthInput();
+    expect(widthInput.node.type).toBe("range");
     expect(widthInput.node.min).toBe("1");
     expect(widthInput.node.max).toBe("100");
 });
@@ -156,12 +164,35 @@ test('inputs stop tracking model when new model is set', () => {
 });
 
 test('inputs work without a property', () => {
-    const widthInput = new NumberInput();
+    const widthInput = new NumberInput({value: 50});
     document.body.appendChild(widthInput.node);
+    expect(widthInput.node.value).toBe("50");
     widthInput.node.value = "60";
     widthInput.node.dispatchEvent(new Event('change'));
     expect(widthInput.node.value).toBe("60");
     const rect = new Rectangle({width: 10, height: 20});
     widthInput.trackModel(rect);  // no effect
     expect(widthInput.node.value).toBe("60");
+});
+
+test('SelectInput works without a property', () => {
+    const ColorInput = SelectInput.withOptions({
+            choices: [
+            ['ff0000', 'red'],
+            ['00ff00', 'green'],
+            ['0000ff', 'blue'],
+        ],
+        value: '00ff00',
+    });
+    const colorInput = new ColorInput();
+    document.body.appendChild(colorInput.node);
+    expect(colorInput.node.value).toBe("00ff00");
+
+    colorInput.node.value = "0000ff";
+    colorInput.node.dispatchEvent(new Event('change'));
+    expect(colorInput.node.value).toBe("0000ff");
+
+    const rect = new Rectangle({width: 10, height: 20, color: 'ff0000'});
+    colorInput.trackModel(rect);  // no effect
+    expect(colorInput.node.value).toBe("0000ff");
 });

@@ -94,8 +94,12 @@ The input components provided by `catwalk-ui` are:
     * `changeEvent` - the name of the event to listen to on the model
     * `label` - the text to use for the input's label
     * `id` - the identifier to use for the input's `id` attribute
+    * `value` - the initial value for the input (note that this will be replaced by the value from the model when `trackModel` is called)
 * `TextInput` - provides an `<input type="text">` element, suitable for tracking `ValueField`s with string values.
 * `NumberInput` - provides an `<input type="number">` element, suitable for tracking `IntegerField`s. Recognises the following additional options:
+    * `min` - the minimum value for the input
+    * `max` - the maximum value for the input
+* `RangeInput` - provides an `<input type="range">` element, suitable for tracking `IntegerField`s as a slider control. Recognises the following additional options:
     * `min` - the minimum value for the input
     * `max` - the maximum value for the input
 * `SelectInput` - provides a `<select>` element, suitable for tracking `EnumField`s. Recognises the following additional option:
