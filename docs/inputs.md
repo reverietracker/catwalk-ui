@@ -95,6 +95,7 @@ The input components provided by `catwalk-ui` are:
     * `label` - the text to use for the input's label
     * `id` - the identifier to use for the input's `id` attribute
     * `value` - the initial value for the input (note that this will be replaced by the value from the model when `trackModel` is called)
+    * `attributes` - an object containing additional attributes to set on the input element
 * `TextInput` - provides an `<input type="text">` element, suitable for tracking `ValueField`s with string values.
 * `NumberInput` - provides an `<input type="number">` element, suitable for tracking `IntegerField`s. Recognises the following additional options:
     * `min` - the minimum value for the input

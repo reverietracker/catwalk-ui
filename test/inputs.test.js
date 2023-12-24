@@ -54,8 +54,9 @@ test('RangeInput can be constructed from field', () => {
 
 test('TextInput can be constructed from field', () => {
     const NameInput = TextInput.forField(Rectangle.fields.name);
-    const nameInput = new NameInput();
+    const nameInput = new NameInput({attributes: {placeholder: "Name"}});
     expect(nameInput.node.type).toBe("text");
+    expect(nameInput.node.placeholder).toBe("Name");
 });
 
 test('SelectInput can be constructed from field', () => {
