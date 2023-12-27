@@ -121,3 +121,9 @@ myColorInput.trackModel(rect);
 document.body.appendChild(myNameInput.node);
 document.body.appendChild(myColorInput.node);
 ```
+
+## Low-level functionality
+
+Inputs provide a `showValue(val)` method, which sets the input's value to the given value, and a `change` event (implemented using the [component-emitter](https://github.com/sindresorhus/component-emitter) package) which is fired whenever the input's value changes in response to user action.
+
+These only relate to the value of the input itself, and not any model connected to it via `trackModel`; calling `showValue` will not update the model field, and the `change` event will not be fired when the input changes in response to a change in the model. Rather, these are used in the implementation of the `trackModel` method, and can be repurposed for similar functionality.

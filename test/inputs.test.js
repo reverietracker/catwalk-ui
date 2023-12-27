@@ -168,7 +168,7 @@ test('inputs work without a property', () => {
     const widthInput = new NumberInput({value: 50});
     document.body.appendChild(widthInput.node);
     expect(widthInput.node.value).toBe("50");
-    widthInput.node.value = "60";
+    widthInput.showValue(60);
     widthInput.node.dispatchEvent(new Event('change'));
     expect(widthInput.node.value).toBe("60");
     const rect = new Rectangle({width: 10, height: 20});
