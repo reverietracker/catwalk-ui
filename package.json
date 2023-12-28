@@ -1,6 +1,6 @@
 {
   "name": "catwalk-ui",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "UI layer for the Catwalk framework",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "jest-environment-jsdom": "^29.7.0"
   },
   "dependencies": {
+    "catwalk": "^0.1.0",
     "component-emitter": "^2.0.0"
   }
 }
