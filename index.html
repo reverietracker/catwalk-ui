@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title -active link-index" href="index.html">catwalk-ui</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-installation" href="#installation">Installation</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-inputs" href="inputs.html">Inputs</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-containers" href="containers.html">Containers</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-input-groups" href="input-groups.html">Input groups</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-index">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="catwalk-ui">catwalk-ui</h1>
+<p><code>catwalk-ui</code> is the UI layer for the <a href="https://www.npmjs.com/package/catwalk">Catwalk</a> framework, allowing easy creation of user interfaces for viewing and editing a data model, that stay up to date with any changes in that model.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-sh">npm install catwalk catwalk-ui
+</code></pre>
+<p>catwalk-ui works best when JSX support is set up, to allow defining UI components using HTML-like syntax. To do this on a Webpack-based project:</p>
+<pre><code class="lang-sh">npm install --save-dev babel-loader @babel/core @babel/plugin-transform-react-jsx-development @babel/preset-env
+</code></pre>
+<p>Then, in webpack.config.js, add a rule for <code>.js</code> files with the <code>@babel/plugin-transform-react-jsx</code> plugin configured as follows:</p>
+<pre><code class="lang-javascript">  <span class="pl-c1">module</span>: {
+    <span class="hljs-attr">rules</span>: [
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.js$/</span>,
+        <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>,
+        <span class="hljs-attr">use</span>: {
+          <span class="hljs-attr">loader</span>: <span class="pl-s">&apos;babel-loader&apos;</span>,
+          <span class="hljs-attr">options</span>: {
+            <span class="hljs-attr">presets</span>: [<span class="pl-s">&quot;@babel/preset-env&quot;</span>],
+            <span class="hljs-attr">plugins</span>: [
+              [
+                <span class="pl-s">&quot;@babel/plugin-transform-react-jsx&quot;</span>,
+                {
+                  <span class="pl-s">&quot;importSource&quot;</span>: <span class="pl-s">&quot;catwalk-ui&quot;</span>,
+                  <span class="pl-s">&quot;runtime&quot;</span>: <span class="pl-s">&quot;automatic&quot;</span>,
+                }
+              ]
+            ],
+          },
+        },
+      },
+    ],
+  },
+</code></pre>
+
+        </div>
+        <div class="footer-nav">
+          <div class="right"><a href="components.html"><span class="label">Next: </span><span class="title">Components</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

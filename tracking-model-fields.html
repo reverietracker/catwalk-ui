@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Tracking model fields - catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">catwalk-ui</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-inputs" href="inputs.html">Inputs</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-containers" href="containers.html">Containers</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-input-groups" href="input-groups.html">Input groups</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-tracking-model-fields">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="tracking-model-fields">Tracking model fields</h1>
+<p>So far, we&apos;ve seen how inputs provide a <code>trackModel</code> method to keep the input updated with any changes to the model, and containers provide a <code>trackModel</code> method to pass on to all child components. <code>trackModel</code> is in fact available on the base <code>Component</code> class, and we can use this mechanism in our own component subclasses.</p>
+<p>By default, the only effect of <code>trackModel</code> is to set the component&apos;s <code>model</code> property to the given model instance. We can override this to set up an event listener on the model, and to update the component&apos;s HTML representation when the model changes. Using the <code>Rectangle</code> model from earlier:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Component } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">RectangleDisplay</span> <span class="pl-k">extends</span> <span class="pl-ent">Component</span> </span>{
+    <span class="pl-k">constructor</span>(options) {
+        <span class="pl-k">super</span>(options);
+        <span class="pl-k">this</span>.changeColorHandler = <span class="hljs-function">(<span class="hljs-params">newColor</span>) =&gt;</span> {
+            <span class="pl-k">this</span>.node.style.backgroundColor = newColor;
+        };
+    }
+
+    createNode() {
+        <span class="pl-k">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Rectangle<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>;
+    }
+
+    trackModel(model) {
+        <span class="pl-c">// If we&apos;re already tracking a model, remove the old listener</span>
+        <span class="pl-k">if</span> (<span class="pl-k">this</span>.model) {
+            <span class="pl-k">this</span>.model.removeListener(<span class="pl-s">&apos;changeColor&apos;</span>, <span class="pl-k">this</span>.changeColorHandler);
+        }
+        <span class="pl-k">super</span>.trackModel(model);
+
+        <span class="pl-c">// Make an initial update to the HTML representation to match the model</span>
+        <span class="pl-k">this</span>.changeColorHandler(<span class="pl-k">this</span>.model.color);
+
+        <span class="pl-c">// Set up a new listener to respond to changes to the model</span>
+        <span class="pl-k">this</span>.model.on(<span class="pl-s">&apos;changeColor&apos;</span>, <span class="pl-k">this</span>.changeColorHandler);
+    }
+}
+</code></pre>
+<p>This pattern of tracking changes to a model field is common enough that <code>Component</code> provides the <code>trackField</code> method as a shortcut:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Component } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">RectangleDisplay</span> <span class="pl-k">extends</span> <span class="pl-ent">Component</span> </span>{
+    <span class="pl-k">constructor</span>(options) {
+        <span class="pl-k">super</span>(options);
+        <span class="pl-k">this</span>.trackField(Rectangle.fields.color, (newColor) =&gt; {
+            <span class="pl-k">this</span>.node.style.backgroundColor = newColor;
+        });
+    }
+
+    createNode() {
+        <span class="pl-k">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Rectangle<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>;
+    }
+}
+</code></pre>
+<p>Here <code>trackField</code> is passed a field object and a callback function. The callback will be called with the new value of the field whenever it changes, and also when the model is first connected via <code>trackModel</code>.</p>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="containers.html"><span class="title">Containers</span></a></div>
+          <div class="right"><a href="input-groups.html"><span class="label">Next: </span><span class="title">Input groups</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

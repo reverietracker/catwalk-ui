@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Containers - catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">catwalk-ui</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-inputs" href="inputs.html">Inputs</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-containers" href="containers.html">Containers</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-fieldsets" href="#fieldsets">Fieldsets</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-input-groups" href="input-groups.html">Input groups</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-containers">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="containers">Containers</h1>
+<p>A container is a component that can contain other components.  The <code>Container</code> class has a class-level <code>components</code> property that can be used to define the components that will be created when the container is instantiated. These are available as properties on the container instance. When defining the container&apos;s HTML representation using JSX, the child components can be referenced directly (i.e. it is possible to write <code>{this.someInput}</code> rather than <code>{this.someInput.node}</code>). Using the <code>Rectangle</code> model seen previously:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Container } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">RectanglePanel</span> <span class="pl-k">extends</span> <span class="pl-ent">Container</span> </span>{
+    <span class="pl-k">static</span> components = {
+        <span class="hljs-attr">colorInput</span>: TextInput.forField(Rectangle.fields.color),
+        <span class="hljs-attr">widthInput</span>: NumberInput.forField(Rectangle.fields.width),
+        <span class="hljs-attr">heightInput</span>: NumberInput.forField(Rectangle.fields.height),
+    }
+
+    createNode() {
+        <span class="pl-k">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Rectangle<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+                {this.colorInput} -
+                {this.widthInput} x {this.heightInput}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+}
+
+rect = <span class="pl-k">new</span> Rectangle({<span class="hljs-attr">width</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">color</span>: <span class="pl-s">&apos;red&apos;</span>});
+<span class="pl-k">const</span> rectanglePanel = <span class="pl-k">new</span> RectanglePanel();
+rectanglePanel.trackModel(rect);
+
+<span class="pl-c1">document</span>.body.appendChild(rectanglePanel.node);
+</code></pre>
+<p>Calls to <code>trackModel</code> method on a container will be passed on to all child components.</p>
+<p>If a <code>createNode</code> method is not provided, a default rendering will be used, consisting of a <code>&lt;div&gt;</code> element containing the child components in sequence. Child components that provide a <code>labelNode</code> property will be rendered as a <code>&lt;div&gt;</code> containing the label and the component; child components that do not provide <code>labelNode</code> will be rendered directly with no wrapper. The <code>baseElementName</code> option can be overridden to use a different element type as the top-level element.</p>
+<h2 id="fieldsets">Fieldsets</h2>
+<p>The <code>Fieldset</code> class is a subclass of <code>Container</code> that provides a default rendering using <code>&lt;fieldset&gt;</code> as the top-level element. It also provides a <code>legend</code> option that can be used to set the <code>&lt;legend&gt;</code> element.</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Container, Fieldset } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">SizeFieldset</span> <span class="pl-k">extends</span> <span class="pl-ent">Fieldset</span>.<span class="pl-ent">withOptions</span>(</span>{legend: <span class="pl-s">&apos;Size&apos;</span>}) {
+    <span class="pl-k">static</span> components = {
+        <span class="hljs-attr">widthInput</span>: NumberInput.forField(Rectangle.fields.width),
+        <span class="hljs-attr">heightInput</span>: NumberInput.forField(Rectangle.fields.height),
+    }
+}
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">RectanglePanel</span> <span class="pl-k">extends</span> <span class="pl-ent">Container</span> </span>{
+    <span class="pl-k">static</span> components = {
+        <span class="hljs-attr">colorInput</span>: TextInput.forField(Rectangle.fields.color),
+        <span class="hljs-attr">sizeFieldset</span>: SizeFieldset,
+    }
+
+    createNode() {
+        <span class="pl-k">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Rectangle<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+                    {this.colorInput.labelNode}
+                    {this.colorInput}
+                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+                {this.sizeFieldset}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+}
+</code></pre>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="inputs.html"><span class="title">Inputs</span></a></div>
+          <div class="right"><a href="tracking-model-fields.html"><span class="label">Next: </span><span class="title">Tracking model fields</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

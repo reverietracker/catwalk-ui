@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Input groups - catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">catwalk-ui</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-inputs" href="inputs.html">Inputs</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-containers" href="containers.html">Containers</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-input-groups" href="input-groups.html">Input groups</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-inputlist" href="#inputlist">InputList</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-input-groups">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="input-groups">Input groups</h1>
+<h2 id="inputlist">InputList</h2>
+<p><code>InputList</code> is a component that manages a list of inputs, and can track a <code>ListField</code> on a model. It provides a <code>trackModel</code> method that can be used to connect the list to a model, and a <code>createNode</code> method that returns a <code>&lt;ul&gt;</code> containing the list of inputs.</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> TodoList = Model([
+  <span class="pl-k">new</span> fields.ListField(<span class="pl-s">&apos;todos&apos;</span>, <span class="pl-k">new</span> fields.ValueField(<span class="pl-s">&apos;todo&apos;</span>), {<span class="hljs-attr">length</span>: <span class="hljs-number">8</span>}),
+]);
+
+<span class="pl-k">const</span> todoList = <span class="pl-k">new</span> TodoList({
+  <span class="hljs-attr">todos</span>: [<span class="pl-s">&apos;buy milk&apos;</span>, <span class="pl-s">&apos;walk dog&apos;</span>, <span class="pl-s">&apos;feed cat&apos;</span>],
+});
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">TodoListDisplay</span> <span class="pl-k">extends</span> <span class="pl-ent">InputList</span>.<span class="pl-ent">forField</span>(<span class="pl-ent">TodoList</span>.<span class="pl-ent">fields</span>.<span class="pl-ent">todos</span>, </span>{
+  <span class="hljs-attr">elementInputClass</span>: TextInput.forField(TodoList.fields.todos.subfield),
+}) {
+}
+<span class="pl-k">const</span> todoListDisplay = <span class="pl-k">new</span> TodoListDisplay();
+<span class="pl-c1">document</span>.body.appendChild(todoListDisplay);
+
+todoListDisplay.trackModel(todoList);
+</code></pre>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="tracking-model-fields.html"><span class="title">Tracking model fields</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

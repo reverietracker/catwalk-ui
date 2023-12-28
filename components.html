@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Components - catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">catwalk-ui</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-inputs" href="inputs.html">Inputs</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-containers" href="containers.html">Containers</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-input-groups" href="input-groups.html">Input groups</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-components">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="components">Components</h1>
+<p>A component is a JavaScript object with an HTML representation defined through the <code>createNode</code> method and available through the <code>node</code> property. The HTML representation is a DOM element, which can be inserted into the document using <code>appendChild</code> or similar.</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Component } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">Greeting</span> <span class="pl-k">extends</span> <span class="pl-ent">Component</span> </span>{
+    <span class="pl-k">constructor</span>(options) {
+        <span class="pl-k">super</span>(options);
+        <span class="pl-k">this</span>.name = <span class="pl-k">this</span>.options.name || <span class="pl-s">&apos;World&apos;</span>;
+        <span class="pl-k">this</span>.color = <span class="pl-k">this</span>.options.color || <span class="pl-s">&apos;red&apos;</span>;
+    }
+
+    createNode() {
+        <span class="pl-k">const</span> node = <span class="pl-c1">document</span>.createElement(<span class="pl-s">&apos;h1&apos;</span>);
+        node.textContent = <span class="pl-s">`Hello, <span class="hljs-subst">${<span class="pl-k">this</span>.name}</span>!`</span>;
+        node.style.color = <span class="pl-k">this</span>.color;
+        <span class="pl-k">return</span> node;
+    }
+};
+
+<span class="pl-k">const</span> greeting = <span class="pl-k">new</span> Greeting({<span class="hljs-attr">name</span>: <span class="pl-s">&apos;Bob&apos;</span>});
+
+<span class="pl-c1">document</span>.body.appendChild(greeting.node);
+</code></pre>
+<p>The HTML definition can be written using <a href="https://react.dev/learn/writing-markup-with-jsx">JSX</a>:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { Component } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="hljs-class"><span class="pl-k">class</span> <span class="pl-ent">Greeting</span> <span class="pl-k">extends</span> <span class="pl-ent">Component</span> </span>{
+    <span class="pl-k">constructor</span>(options) {
+        <span class="pl-k">super</span>(options);
+        <span class="pl-k">this</span>.name = <span class="pl-k">this</span>.options.name || <span class="pl-s">&apos;World&apos;</span>;
+        <span class="pl-k">this</span>.color = <span class="pl-k">this</span>.options.color || <span class="pl-s">&apos;red&apos;</span>;
+    }
+
+    createNode() {
+        <span class="pl-k">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">style</span>=<span class="pl-s">{{color:</span> <span class="hljs-attr">this.color</span>}}&gt;</span>
+                Hello, {this.name}!
+            <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+        );
+    }
+};
+
+<span class="pl-k">const</span> greeting = <span class="pl-k">new</span> Greeting({<span class="hljs-attr">name</span>: <span class="pl-s">&apos;Bob&apos;</span>});
+
+<span class="pl-c1">document</span>.body.appendChild(greeting.node);
+</code></pre>
+<p>The <code>withOptions</code> method can be used to create a subclass with default options:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> PurpleGreeting = Greeting.withOptions({<span class="hljs-attr">color</span>: <span class="pl-s">&apos;purple&apos;</span>});
+
+<span class="pl-k">const</span> greeting = <span class="pl-k">new</span> PurpleGreeting({<span class="hljs-attr">name</span>: <span class="pl-s">&apos;Bob&apos;</span>});
+
+<span class="pl-c1">document</span>.body.appendChild(greeting.node);
+</code></pre>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="index.html"><span class="title">catwalk-ui</span></a></div>
+          <div class="right"><a href="inputs.html"><span class="label">Next: </span><span class="title">Inputs</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

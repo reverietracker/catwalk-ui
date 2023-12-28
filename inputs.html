@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=90051322">
+    <script src="assets/script.js?t=93f1a66c"></script>
+    <title>Inputs - catwalk-ui</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <ul>
+          <li class="menu-item -level-0 -parent">
+            <ul class="submenu">
+              <li class="menu-item -level-1"><a class="link title  link-index" href="index.html">catwalk-ui</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-components" href="components.html">Components</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title -active link-inputs" href="inputs.html">Inputs</a>
+                <ul class="headings heading-list">
+                  <li class="heading-item -depth-2"><a class="hlink link-low-level-functionality" href="#low-level-functionality">Low-level functionality</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-containers" href="containers.html">Containers</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-tracking-model-fields" href="tracking-model-fields.html">Tracking model fields</a>
+              </li>
+              <li class="menu-item -level-1"><a class="link title  link-input-groups" href="input-groups.html">Input groups</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="body page-inputs">
+        <div class="header-nav">
+          <div class="right">
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id="inputs">Inputs</h1>
+<p>catwalk-ui provides a set of input components that can be used to track model fields.</p>
+<p>Starting with a model definition:</p>
+<pre><code class="lang-javascript">import { Model, fields } from &apos;catwalk&apos;;
+
+class Rectangle extends Model([
+    new fields.IntegerField(&apos;width&apos;, {min: 1, max: 1000}),
+    new fields.IntegerField(&apos;height&apos;, {min: 1, max: 1000}),
+    new fields.ValueField(&apos;name&apos;),
+    new fields.EnumField(&apos;color&apos;, {
+        choices: [
+            [&apos;ff0000&apos;, &apos;red&apos;],
+            [&apos;00ff00&apos;, &apos;green&apos;],
+            [&apos;0000ff&apos;, &apos;blue&apos;],
+        ],
+        default: &apos;ff0000&apos;
+    }),
+]) {
+    getArea() {
+        return this.width * this.height;
+    }
+}
+
+const rect = new Rectangle({width: 50, height: 50, color: &apos;red&apos;});
+window.rect = rect;
+</code></pre>
+<p>we can set up a <code>NumberInput</code> to track the <code>width</code> field of <code>rect</code>:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { NumberInput } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="pl-k">const</span> myWidthInput = <span class="pl-k">new</span> NumberInput({
+    <span class="hljs-attr">property</span>: <span class="pl-s">&apos;width&apos;</span>, <span class="hljs-attr">changeEvent</span>: <span class="pl-s">&apos;changeWidth&apos;</span>, <span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">100</span>
+});
+myWidthInput.trackModel(rect);
+</code></pre>
+<p>The <code>trackModel</code> method creates a two-way connection between the input and the given model instance, accessing the <code>&apos;width&apos;</code> property and listening to the <code>&apos;changeWidth&apos;</code> event as specified on <code>NumberInput</code>&apos;s constructor.</p>
+<p>Since <code>NumberInput</code> is a component, it provides a <code>node</code> property giving a DOM node that can be inserted into the document:</p>
+<pre><code class="lang-javascript"><span class="pl-c1">document</span>.body.appendChild(myWidthInput.node);
+</code></pre>
+<p>Try reading and writing <code>window.rect.width</code> in the browser&apos;s JavaScript console - you&apos;ll see that the input field and the model value are kept in sync with each other.</p>
+<p>Rather than instantiating <code>NumberInput</code> with a set of properties, we can use <code>NumberInput.withOptions</code> to create a subclass that will have those options pre-set on all instances:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> WidthInput = NumberInput.withOptions({
+    <span class="hljs-attr">property</span>: <span class="pl-s">&apos;width&apos;</span>, <span class="hljs-attr">changeEvent</span>: <span class="pl-s">&apos;changeWidth&apos;</span>, <span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">100</span>
+});
+<span class="pl-k">const</span> myWidthInput1 = <span class="pl-k">new</span> WidthInput();
+<span class="pl-k">const</span> myWidthInput2 = <span class="pl-k">new</span> WidthInput();
+<span class="pl-k">const</span> myWidthInput3 = <span class="pl-k">new</span> WidthInput();
+myWidthInput1.trackModel(rect);
+myWidthInput2.trackModel(rect);
+myWidthInput3.trackModel(rect);
+<span class="pl-c1">document</span>.body.appendChild(myWidthInput1.node);
+<span class="pl-c1">document</span>.body.appendChild(myWidthInput2.node);
+<span class="pl-c1">document</span>.body.appendChild(myWidthInput3.node);
+</code></pre>
+<p>Note that the options we&apos;re passing to <code>withOptions</code> are really just duplicating information defined on the model. As a shorthand, we can tell NumberInput to pick up its options from the model field using <code>forField</code>:</p>
+<pre><code class="lang-javascript"><span class="pl-k">const</span> WidthInput = NumberInput.forField(Rectangle.fields.width);
+</code></pre>
+<p>Like <code>withOptions</code>, <code>forField</code> returns a class rather than an instance - it must be instantiated separately.</p>
+<p>Inputs provide a <code>labelNode</code> property, giving a <code>&lt;label&gt;</code> element for the input:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { TextInput } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="pl-k">const</span> myWidthInput = <span class="pl-k">new</span> WidthInput();
+myWidthInput.trackModel(rect);
+
+<span class="pl-c1">document</span>.body.appendChild(myWidthInput.labelNode);
+<span class="pl-c1">document</span>.body.appendChild(myWidthInput.node);
+</code></pre>
+<p>The input components provided by <code>catwalk-ui</code> are:</p>
+<ul>
+<li><code>Input</code> - the base class for all inputs, not intended to be used directly. Recognises the following options:
+<ul>
+<li><code>property</code> - the name of the model field to track</li>
+<li><code>changeEvent</code> - the name of the event to listen to on the model</li>
+<li><code>label</code> - the text to use for the input&apos;s label</li>
+<li><code>id</code> - the identifier to use for the input&apos;s <code>id</code> attribute</li>
+<li><code>value</code> - the initial value for the input (note that this will be replaced by the value from the model when <code>trackModel</code> is called)</li>
+<li><code>attributes</code> - an object containing additional attributes to set on the input element</li>
+</ul>
+</li>
+<li><code>TextInput</code> - provides an <code>&lt;input type=&quot;text&quot;&gt;</code> element, suitable for tracking <code>ValueField</code>s with string values.</li>
+<li><code>NumberInput</code> - provides an <code>&lt;input type=&quot;number&quot;&gt;</code> element, suitable for tracking <code>IntegerField</code>s. Recognises the following additional options:
+<ul>
+<li><code>min</code> - the minimum value for the input</li>
+<li><code>max</code> - the maximum value for the input</li>
+</ul>
+</li>
+<li><code>RangeInput</code> - provides an <code>&lt;input type=&quot;range&quot;&gt;</code> element, suitable for tracking <code>IntegerField</code>s as a slider control. Recognises the following additional options:
+<ul>
+<li><code>min</code> - the minimum value for the input</li>
+<li><code>max</code> - the maximum value for the input</li>
+</ul>
+</li>
+<li><code>SelectInput</code> - provides a <code>&lt;select&gt;</code> element, suitable for tracking <code>EnumField</code>s. Recognises the following additional option:
+<ul>
+<li><code>choices</code> - a list of [value, label] pairs to use for the <code>&lt;option&gt;</code> elements</li>
+</ul>
+</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="lang-javascript"><span class="pl-k">import</span> { TextInput, SelectInput } <span class="pl-k">from</span> <span class="pl-s">&apos;catwalk-ui&apos;</span>;
+
+<span class="pl-k">const</span> NameInput = TextInput.forField(Rectangle.fields.name);
+<span class="pl-k">const</span> myNameInput = <span class="pl-k">new</span> NameInput();
+myNameInput.trackModel(rect);
+<span class="pl-k">const</span> ColorInput = SelectInput.forField(Rectangle.fields.color);
+<span class="pl-k">const</span> myColorInput = <span class="pl-k">new</span> ColorInput();
+myColorInput.trackModel(rect);
+
+<span class="pl-c1">document</span>.body.appendChild(myNameInput.node);
+<span class="pl-c1">document</span>.body.appendChild(myColorInput.node);
+</code></pre>
+<h2 id="low-level-functionality">Low-level functionality</h2>
+<p>Inputs provide a <code>showValue(val)</code> method, which sets the input&apos;s value to the given value, and a <code>change</code> event (implemented using the <a href="https://github.com/sindresorhus/component-emitter">component-emitter</a> package) which is fired whenever the input&apos;s value changes in response to user action.</p>
+<p>These only relate to the value of the input itself, and not any model connected to it via <code>trackModel</code>; calling <code>showValue</code> will not update the model field, and the <code>change</code> event will not be fired when the input changes in response to a change in the model. Rather, these are used in the implementation of the <code>trackModel</code> method, and can be repurposed for similar functionality.</p>
+
+        </div>
+        <div class="footer-nav">
+          <div class="left"><a href="components.html"><span class="title">Components</span></a></div>
+          <div class="right"><a href="containers.html"><span class="label">Next: </span><span class="title">Containers</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
