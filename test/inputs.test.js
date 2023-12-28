@@ -3,7 +3,7 @@
  */
 
 const { Model, fields } = require('catwalk');
-const { Component, NumberInput, RangeInput, TextInput, SelectInput } = require('../');
+const { Component, InputList, NumberInput, RangeInput, TextInput, SelectInput } = require('../');
 
 class Rectangle extends Model([
     new fields.IntegerField('width', {min: 1, max: 100}),
@@ -30,6 +30,10 @@ class Wave extends Model([
         [3, "Sine"],
     ], default: 1}),
 ]) {}
+
+const TodoList = Model([
+    new fields.ListField('todos', new fields.ValueField('todo'), {length: 8}),
+]);
 
 test('Base component has no rendering', () => {
     const base = new Component();
@@ -196,4 +200,71 @@ test('SelectInput works without a property', () => {
     const rect = new Rectangle({width: 10, height: 20, color: 'ff0000'});
     colorInput.trackModel(rect);  // no effect
     expect(colorInput.node.value).toBe("0000ff");
+});
+
+test('InputList can be constructed from field', () => {
+    const TodoListDisplay = InputList.forField(TodoList.fields.todos, {
+        elementInputClass: TextInput.forField(TodoList.fields.todos.subfield),
+    });
+    const todoList = new TodoList({
+        todos: ['stuff turkey', 'buy milk', 'clean house'],
+    });
+
+    const todoListDisplay = new TodoListDisplay();
+    document.body.appendChild(todoListDisplay.node);
+
+    expect(todoListDisplay.node.tagName).toBe("UL");
+    expect(todoListDisplay.node.children[0].tagName).toBe("LI");
+    expect(todoListDisplay.node.children[0].children[0].tagName).toBe("INPUT");
+
+    let changedIndex = null;
+    let changedValue = null;
+    todoListDisplay.on("change", (index, value) => {
+        changedIndex = index;
+        changedValue = value;
+    })
+
+    todoListDisplay.node.children[0].children[0].value = "write todo list";
+    todoListDisplay.node.children[0].children[0].dispatchEvent(new Event('change'));
+
+    expect(changedIndex).toBe(0);
+    expect(changedValue).toBe("write todo list");
+
+    todoListDisplay.trackModel(todoList);
+    expect(todoListDisplay.node.children[0].children[0].value).toBe("stuff turkey");
+    todoList.setTodo(0, 'put turkey in oven');
+    expect(todoListDisplay.node.children[0].children[0].value).toBe("put turkey in oven");
+    todoListDisplay.node.children[1].children[0].value = "buy eggs";
+    todoListDisplay.node.children[1].children[0].dispatchEvent(new Event('change'));
+    expect(todoList.getTodo(1)).toBe("buy eggs");
+    const otherTodoList = new TodoList({
+        todos: ['milk cows', 'feed chickens', 'clean barn'],
+    });
+    todoListDisplay.trackModel(otherTodoList);
+    expect(todoListDisplay.node.children[0].children[0].value).toBe("milk cows");
+});
+
+test('InputList works without a property', () => {
+    const TodoListDisplay = InputList.withOptions({
+        elementCount: 3,
+        elementInputClass: TextInput,
+    });
+
+    const todoListDisplay = new TodoListDisplay();
+    document.body.appendChild(todoListDisplay.node);
+    expect(todoListDisplay.node.tagName).toBe("UL");
+    expect(todoListDisplay.node.children[0].tagName).toBe("LI");
+    expect(todoListDisplay.node.children[0].children[0].tagName).toBe("INPUT");
+
+    let changedIndex = null;
+    let changedValue = null;
+    todoListDisplay.on("change", (index, value) => {
+        changedIndex = index;
+        changedValue = value;
+    })
+
+    todoListDisplay.node.children[0].children[0].value = "buy eggs";
+    todoListDisplay.node.children[0].children[0].dispatchEvent(new Event('change'));
+    expect(changedIndex).toBe(0);
+    expect(changedValue).toBe("buy eggs");
 });
