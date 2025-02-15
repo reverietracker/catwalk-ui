@@ -1,12 +1,14 @@
 // const { Component } = require('.');
 
 function addChild(parent, child) {
-    if (typeof(child) == 'string') {
-        parent.appendChild(document.createTextNode(child));
-    } else if ('node' in child) {
-        parent.appendChild(child.node);
+    if (typeof(child) == 'object') {
+        if ('node' in child) {
+            parent.appendChild(child.node);
+        } else {
+            parent.appendChild(child);
+        }
     } else {
-        parent.appendChild(child);
+        parent.appendChild(document.createTextNode(child));
     }
 }
 
